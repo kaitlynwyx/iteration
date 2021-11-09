@@ -191,11 +191,11 @@ pre code {
 <pre class="r"><code>x_vec = rnorm(30, mean = 5, sd = 3)
 
 (x_vec - mean(x_vec)) / sd(x_vec)</code></pre>
-<pre><code>##  [1]  0.7375364 -0.6364197 -1.0652223  0.6656795 -1.3887250 -2.8941713
-##  [7]  0.1630059  0.6625917 -0.5460114  1.1659849  0.4300668  1.5799033
-## [13]  0.9878561 -0.3027076 -0.1710443 -0.6804583  0.5335918  0.1805369
-## [19] -0.1567448 -1.3373261 -1.3339151  0.4200223  0.9259700  1.0956915
-## [25]  0.1958335  1.0974108 -0.6348105  1.2504990 -0.5210128 -0.4236110</code></pre>
+<pre><code>##  [1]  0.19732944 -1.52400722 -1.73993960  0.97701357 -1.13804969  0.35256704
+##  [7]  0.70513073  0.51237100 -0.15361595 -1.30929643 -0.25938450 -0.88339023
+## [13]  0.04497044  0.31244217 -0.46372827  1.08693059 -0.71311040  1.74276084
+## [19] -0.86646828 -0.61162657  1.54186724  0.63881615  2.51330385 -0.70871422
+## [25]  0.04601666  0.46601288  0.19766879  0.48529109 -0.18755314 -1.26160797</code></pre>
 <p>I want a function to compute z-score</p>
 <pre class="r"><code>z_scores = function(x) {
   
@@ -213,11 +213,11 @@ pre code {
 }
 
 z_scores(x_vec)</code></pre>
-<pre><code>##  [1]  0.7375364 -0.6364197 -1.0652223  0.6656795 -1.3887250 -2.8941713
-##  [7]  0.1630059  0.6625917 -0.5460114  1.1659849  0.4300668  1.5799033
-## [13]  0.9878561 -0.3027076 -0.1710443 -0.6804583  0.5335918  0.1805369
-## [19] -0.1567448 -1.3373261 -1.3339151  0.4200223  0.9259700  1.0956915
-## [25]  0.1958335  1.0974108 -0.6348105  1.2504990 -0.5210128 -0.4236110</code></pre>
+<pre><code>##  [1]  0.19732944 -1.52400722 -1.73993960  0.97701357 -1.13804969  0.35256704
+##  [7]  0.70513073  0.51237100 -0.15361595 -1.30929643 -0.25938450 -0.88339023
+## [13]  0.04497044  0.31244217 -0.46372827  1.08693059 -0.71311040  1.74276084
+## [19] -0.86646828 -0.61162657  1.54186724  0.63881615  2.51330385 -0.70871422
+## [25]  0.04601666  0.46601288  0.19766879  0.48529109 -0.18755314 -1.26160797</code></pre>
 <p>Try my function on some other thing: These should give errors</p>
 <pre class="r"><code>z_scores(3)</code></pre>
 <pre><code>## Error in z_scores(3): Input must have at least three numbers</code></pre>
@@ -255,7 +255,7 @@ mean_and_sd(x_vec)</code></pre>
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  2.87  4.34</code></pre>
+## 1  3.59  3.75</code></pre>
 </div>
 <div id="multiple-inputs" class="section level2">
 <h2>Multiple inputs</h2>
@@ -273,7 +273,7 @@ sim_data %&gt;%
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  3.89  2.73</code></pre>
+## 1  4.16  3.08</code></pre>
 <pre class="r"><code>sim_mean_sd = function(sample_size, mu = 3, sigma = 4) {
   
   sim_data = 
@@ -293,12 +293,12 @@ sim_mean_sd(100, 6, 3)</code></pre>
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  5.95  2.94</code></pre>
+## 1  5.84  3.14</code></pre>
 <pre class="r"><code>sim_mean_sd(100)</code></pre>
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  2.65  3.49</code></pre>
+## 1  3.15  3.65</code></pre>
 </div>
 <div id="lets-review-the-napolean-dynamite" class="section level2">
 <h2>Let’s review the Napolean Dynamite</h2>
@@ -406,6 +406,34 @@ read_page_reviews(dynamite_urls[2])</code></pre>
     read_page_reviews(dynamite_urls[4]),
     read_page_reviews(dynamite_urls[5])
   )</code></pre>
+</div>
+<div id="mean-scoping-example" class="section level2">
+<h2>Mean scoping example</h2>
+<pre class="r"><code>f = function(x) {
+  z = x + y
+  z
+}
+
+x = 1
+y = 2
+
+f(x = y)</code></pre>
+<pre><code>## [1] 4</code></pre>
+</div>
+<div id="funcntions-as-argument" class="section level2">
+<h2>Funcntions as argument</h2>
+<pre class="r"><code>my_summary = function(x, summ_func) {
+  
+  summ_func(x)
+}
+
+x_vec = rnorm(100, 3, 7)
+mean(x_vec)</code></pre>
+<pre><code>## [1] 3.322213</code></pre>
+<pre class="r"><code>median(x_vec)</code></pre>
+<pre><code>## [1] 3.488642</code></pre>
+<pre class="r"><code>my_summary(x_vec, median)</code></pre>
+<pre><code>## [1] 3.488642</code></pre>
 </div>
 
 

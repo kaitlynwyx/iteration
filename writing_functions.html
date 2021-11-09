@@ -191,11 +191,11 @@ pre code {
 <pre class="r"><code>x_vec = rnorm(30, mean = 5, sd = 3)
 
 (x_vec - mean(x_vec)) / sd(x_vec)</code></pre>
-<pre><code>##  [1] -0.14740008 -1.25606993 -1.55990377 -0.26582237 -1.49571419 -0.32499737
-##  [7] -0.51177117  1.03666645 -0.13633320 -0.22352798  2.11853925  1.54562749
-## [13] -0.72075703 -0.15445418  0.99186590 -0.69783471 -0.67266877 -0.86043555
-## [19]  0.58847394 -0.03814261 -1.10067092  1.82615375 -0.38675382  1.36909327
-## [25]  1.57696775  0.98333335 -0.57959570 -0.26635705 -0.52201585 -0.11549489</code></pre>
+<pre><code>##  [1]  0.7375364 -0.6364197 -1.0652223  0.6656795 -1.3887250 -2.8941713
+##  [7]  0.1630059  0.6625917 -0.5460114  1.1659849  0.4300668  1.5799033
+## [13]  0.9878561 -0.3027076 -0.1710443 -0.6804583  0.5335918  0.1805369
+## [19] -0.1567448 -1.3373261 -1.3339151  0.4200223  0.9259700  1.0956915
+## [25]  0.1958335  1.0974108 -0.6348105  1.2504990 -0.5210128 -0.4236110</code></pre>
 <p>I want a function to compute z-score</p>
 <pre class="r"><code>z_scores = function(x) {
   
@@ -213,11 +213,11 @@ pre code {
 }
 
 z_scores(x_vec)</code></pre>
-<pre><code>##  [1] -0.14740008 -1.25606993 -1.55990377 -0.26582237 -1.49571419 -0.32499737
-##  [7] -0.51177117  1.03666645 -0.13633320 -0.22352798  2.11853925  1.54562749
-## [13] -0.72075703 -0.15445418  0.99186590 -0.69783471 -0.67266877 -0.86043555
-## [19]  0.58847394 -0.03814261 -1.10067092  1.82615375 -0.38675382  1.36909327
-## [25]  1.57696775  0.98333335 -0.57959570 -0.26635705 -0.52201585 -0.11549489</code></pre>
+<pre><code>##  [1]  0.7375364 -0.6364197 -1.0652223  0.6656795 -1.3887250 -2.8941713
+##  [7]  0.1630059  0.6625917 -0.5460114  1.1659849  0.4300668  1.5799033
+## [13]  0.9878561 -0.3027076 -0.1710443 -0.6804583  0.5335918  0.1805369
+## [19] -0.1567448 -1.3373261 -1.3339151  0.4200223  0.9259700  1.0956915
+## [25]  0.1958335  1.0974108 -0.6348105  1.2504990 -0.5210128 -0.4236110</code></pre>
 <p>Try my function on some other thing: These should give errors</p>
 <pre class="r"><code>z_scores(3)</code></pre>
 <pre><code>## Error in z_scores(3): Input must have at least three numbers</code></pre>
@@ -255,7 +255,7 @@ mean_and_sd(x_vec)</code></pre>
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  3.59  3.90</code></pre>
+## 1  2.87  4.34</code></pre>
 </div>
 <div id="multiple-inputs" class="section level2">
 <h2>Multiple inputs</h2>
@@ -273,7 +273,7 @@ sim_data %&gt;%
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  4.47  3.03</code></pre>
+## 1  3.89  2.73</code></pre>
 <pre class="r"><code>sim_mean_sd = function(sample_size, mu = 3, sigma = 4) {
   
   sim_data = 
@@ -293,12 +293,119 @@ sim_mean_sd(100, 6, 3)</code></pre>
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  6.29  2.91</code></pre>
+## 1  5.95  2.94</code></pre>
 <pre class="r"><code>sim_mean_sd(100)</code></pre>
 <pre><code>## # A tibble: 1 × 2
 ##    mean    sd
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1  3.45  3.79</code></pre>
+## 1  2.65  3.49</code></pre>
+</div>
+<div id="lets-review-the-napolean-dynamite" class="section level2">
+<h2>Let’s review the Napolean Dynamite</h2>
+<pre class="r"><code>url = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1&quot;
+
+dynamite_html = read_html(url)
+
+review_titles = 
+  dynamite_html %&gt;%
+  html_nodes(&quot;.a-text-bold span&quot;) %&gt;%
+  html_text()
+
+review_stars = 
+  dynamite_html %&gt;%
+  html_nodes(&quot;#cm_cr-review_list .review-rating&quot;) %&gt;%
+  html_text() %&gt;%
+  str_extract(&quot;^\\d&quot;) %&gt;%
+  as.numeric()
+
+review_text = 
+  dynamite_html %&gt;%
+  html_nodes(&quot;.review-text-content span&quot;) %&gt;%
+  html_text() %&gt;% 
+  str_replace_all(&quot;\n&quot;, &quot;&quot;) %&gt;% 
+  str_trim()
+
+reviews = tibble(
+  title = review_titles,
+  stars = review_stars,
+  text = review_text
+)</code></pre>
+<p>What about the next page in reviews</p>
+<pre class="r"><code>read_page_reviews = function(url) {
+  
+  dynamite_html = read_html(url)
+  
+  review_titles = 
+    dynamite_html %&gt;%
+    html_nodes(&quot;.a-text-bold span&quot;) %&gt;%
+    html_text()
+  
+  review_stars = 
+    dynamite_html %&gt;%
+    html_nodes(&quot;#cm_cr-review_list .review-rating&quot;) %&gt;%
+    html_text() %&gt;%
+    str_extract(&quot;^\\d&quot;) %&gt;%
+    as.numeric()
+  
+  review_text = 
+    dynamite_html %&gt;%
+    html_nodes(&quot;.review-text-content span&quot;) %&gt;%
+    html_text() %&gt;% 
+    str_replace_all(&quot;\n&quot;, &quot;&quot;) %&gt;% 
+    str_trim()
+  
+  reviews = 
+    tibble(
+      title = review_titles,
+      stars = review_stars,
+      text = review_text)
+  
+  return(reviews)
+}</code></pre>
+<p>Let me try my function</p>
+<pre class="r"><code>dynamite_url = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1&quot;
+
+read_page_reviews(dynamite_url)</code></pre>
+<pre><code>## # A tibble: 10 × 3
+##    title                                                 stars text             
+##    &lt;chr&gt;                                                 &lt;dbl&gt; &lt;chr&gt;            
+##  1 Vintage                                                   5 Easy to order. I…
+##  2 too many commercials                                      1 5 minutes into t…
+##  3 this film is so good!                                     5 VOTE FOR PEDRO!  
+##  4 Good movie                                                5 Weird story, goo…
+##  5 I Just everyone to know this....                          5 VOTE FOR PEDRO !…
+##  6 the cobweb in his hair during the bike ramp scene lol     5 5 stars for bein…
+##  7 Best quirky movie ever                                    5 You all know the…
+##  8 Classic Film                                              5 Had to order thi…
+##  9 hehehehe                                                  5 goodjobboys      
+## 10 Painful                                                   1 I think I sneeze…</code></pre>
+<p>Let’s read a few pages of reviews</p>
+<pre class="r"><code>dynamite_url_base = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=&quot;
+
+dynamite_urls = str_c(dynamite_url_base, 1:5)
+
+read_page_reviews(dynamite_urls[2])</code></pre>
+<pre><code>## # A tibble: 10 × 3
+##    title                             stars text                                 
+##    &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;                                
+##  1 GRAND                                 5 GRAND                                
+##  2 Hello, 90s                            5 So nostalgic movie                   
+##  3 Cult Classic                          5 Watched it with my older grandchilde…
+##  4 Format was inaccurate                 4 There was an option to choose blue R…
+##  5 Good funny                            3 Would recommend                      
+##  6 Not available w/in 48 hour window     1 I couldn&#39;t watch it and there is no …
+##  7 Your mom went to college.             5 Classic funny movie. It has some of …
+##  8 Very funny movie                      5 I watch this movie with my family. V…
+##  9 Watch it twice! Trust me!             5 Nothing to dislike!  Cult Classic Mo…
+## 10 A classic                             5 If you don’t enjoy this movie, we ca…</code></pre>
+<pre class="r"><code>all_reviews = 
+  bind_rows(
+    read_page_reviews(dynamite_urls[1]),
+    read_page_reviews(dynamite_urls[2]),
+    read_page_reviews(dynamite_urls[3]),
+    read_page_reviews(dynamite_urls[4]),
+    read_page_reviews(dynamite_urls[5])
+  )</code></pre>
 </div>
 
 
